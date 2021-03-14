@@ -1,0 +1,46 @@
+{% set currentPage = app.request.query.get('p') ?: 1 %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+{% set currentParams = app.request.query.all %}
+{% if lastPage > 1 %}
+    <nav>
+        <ul class="pagination pull-right">
+            {% if currentPage > 1 %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="{{ path(currentRoute, currentParams|merge({p: currentPage - 1})) }}"
+                       aria-label="Previous"
+                    >
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="disabled">
+                    <a href="#">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                </li>
+            {% endif %}
+            {% for i in 1..lastPage %}
+                <li class="page-item {% if i == currentPage %}active{% endif %}">
+                    <a class="page-link" href="{{ path(currentRoute, currentParams|merge({p: i})) }}">{{ i }}</a>
+                </li>
+            {% endfor %}
+            {% if currentPage < lastPage %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="{{ path(currentRoute, currentParams|merge({p: currentPage + 1})) }}"
+                       aria-label="Next"
+                    >
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="disabled">
+                    <a href="#">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
